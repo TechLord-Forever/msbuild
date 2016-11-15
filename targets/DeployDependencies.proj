@@ -3,7 +3,11 @@
   <Import Project="..\dir.props" />
 
   <!-- Copy Roslyn Compiler tools to the output path (so we have csc.exe, etc) -->
-  <Target Name="CopyCompilerTools">
+  <!-- On .NET Core, we deploy compiler tools by copying the package assets
+       in RestoreRuntimePackages, but the full-framework Roslyn packages don't
+       deliver everything as assets, so this copies them from the tools/ folder. -->
+  <Target Name="CopyCompilerTools"
+          Condition="'$(NetCoreBuild)' != 'true'">
     <ItemGroup>
       <CompilerToolsFiles Include="$(CompilerToolsDir)\*.*" />
     </ItemGroup>
